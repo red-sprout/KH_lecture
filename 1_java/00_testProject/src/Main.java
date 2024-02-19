@@ -1,42 +1,92 @@
 import java.io.*;
 import java.util.*;
 
+// [BOJ] 사다리 조작 / 골드 3 / 2시간(+수정 30분)
+// 알고리즘 분류 : 구현 / 브루트포스 알고리즘 / 백트래킹
 public class Main {
-	private static int n, m;
-	private static int[][] map;
-	private static List<Integer> list;
-	private static boolean[][] canWatch;
-	
-	// 1 -> 0,1,2,3 2-> (0,1) (2,3) 3-> not 0,1,2,3
-	private static int[] dr = {-1, 1, 0, 0};
-	private static int[] dc = {0, 0, -1, 0};
+	private static int n, m, h;
+	private static boolean[][] ladder;
+	private static BufferedReader br;
 	
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
 		st = new StringTokenizer(br.readLine());
 		n = Integer.parseInt(st.nextToken());
 		m = Integer.parseInt(st.nextToken());
-		map = new int[n][m];
-		list = new ArrayList<>();
-		canWatch = new boolean[n][m];
+		h = Integer.parseInt(st.nextToken());
+		ladder = new boolean[h + 1][n + 1];
 		
-		for(int i = 0; i < n; i++) {
+		int a, b;
+		for(int i = 0; i < m; i++) {
 			st = new StringTokenizer(br.readLine());
-			for(int j = 0; j < m; j++) {
-				int info = Integer.parseInt(st.nextToken());
-				if(info == 6) {
-					canWatch[i][j] = true;
-				}
-				map[i][j] = info;
-			}
+			a = Integer.parseInt(st.nextToken());
+			b = Integer.parseInt(st.nextToken());
+			ladder[a][b] = true;
 		}
 		
+		for(int test = 0; test <= 3; test++) {
+			dfs(1, 0, test, ladder);
+		}
+		
+		System.out.println(-1);
 		br.close();
 	}
 	
-	public static void mode(int cctv ) {
+	public static void dfs(int row, int cnt, int test, boolean[][] now) throws IOException {
+		if(cnt == test) {
+			if(isSame(now)) {
+				System.out.println(test);
+				br.close();
+				System.exit(0);
+			}
+			return;
+		}
 		
+		for(int i = row; i <= h; i++) {
+			for(int j = 1; j <= n; j++) {
+				if(now[i][j]) continue;
+				if(j == 1) {
+					if(now[i][j + 1]) continue;
+				} else if(j == n) {
+					continue;
+				} else {
+					if(now[i][j + 1] || now[i][j - 1]) continue;
+				}
+				
+				now[i][j] = true;
+				dfs(i, cnt + 1, test, now);
+				now[i][j] = false;
+			}
+		}
+	}
+	
+	public static boolean isSame(boolean[][] now) {
+		for(int i = 1; i <= n; i++) {
+			if(i != getEnd(0, i, now)) return false;
+		}
+		return true;
+	}
+	
+	public static int getEnd(int row, int col, boolean[][] now) {
+		int nowRow = row;
+		int nowCol = col;
+		
+		if(nowRow == h) {
+			return nowCol;
+		}
+		
+		nowRow++;
+		if(nowCol == 1) {
+			if(now[nowRow][nowCol]) nowCol++;
+		} else if(col == n) {
+			if(now[nowRow][nowCol - 1]) nowCol--;
+		} else {
+			if(now[nowRow][nowCol]) nowCol++;
+			else if(now[nowRow][nowCol - 1]) nowCol--;
+		}
+		
+		return getEnd(nowRow, nowCol, now);
 	}
 }
