@@ -88,3 +88,89 @@ HAVING COUNT(BONUS) = 0;
     HAVING 조건식(그룹함수를 가지고 기술)                                  ------- 4
     ORDER BY 컬럼 | 별칭 | 순서 [ASC | DESC] [NULLS FIST | NULLS LAST]  ------- 6
 */
+
+-----------------------------------------------------------------------------
+/*
+    집합 연산자 == SET OPERATION
+    여러개의 쿼리문을 하나의 쿼리문으로 만드는 연산자
+    
+    -UNION : OR | 합집합(두 쿼리문 수행한 결과값을 더한다.)
+    -INTERSECT : AND | 교집합(두 쿼리문을 수행한 결과값에 중복된 결과값)
+    -UNION ALL : 합집합 + 교집합 (중복되는게 두번 표현될 수 있다.)
+    -MINUS : 차집합(선행결과값에 후행결과값을 뺀 나머지)
+*/
+
+-- 1. UNION
+-- 부서코드가 D5인 사원 또는 급여가 300만원 초과인 사원들의 사번, 이름, 부서코드, 급여 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5' OR SALARY > 3000000;
+
+-- 부서코드가 D5인 사원의 사번, 이름, 부서코드, 급여 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5';
+
+-- 급여가 300만원 초과인 사원들의 사번, 이름, 부서코드, 급여 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+
+-- UNION으로 합하기
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+UNION
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+
+-- 2. INTERSECT(교집합)
+-- 부서코드가 D5이면서 급여도 300만원 초과인 사원들의 사번, 이름, 부서코드, 급여 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5' AND SALARY > 3000000;
+
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+INTERSECT
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000;
+
+-----------------------------------------------------------------------------
+-- 집합연산자 사용시 주의사항
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+UNION
+SELECT EMP_ID, EMAIL, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000
+ORDER BY EMP_ID;
+-- 컬럼의 개수는 똑같아야합니다.
+-- 컬럼자리마다 동일한 타입으로 기술해야한다.
+-- 정렬하고싶다면 ORDER BY는 마지막에 기술한다.
+
+-----------------------------------------------------------------------------
+-- 3. UNION ALL : 여러개의 쿼리 결과를 무조건 다 더하는 연산자
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+UNION ALL
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000
+ORDER BY EMP_ID;
+
+-- 4. MINUS : 선행 SELECT결과에서 후행 SELECT결과를 뺀 나머지(차집합)
+-- 부서코드가 D5인 사원들 중 급여가 300만원 초과인 사원들을 제외하고 조회
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE DEPT_CODE = 'D5'
+MINUS
+SELECT EMP_ID, EMP_NAME, DEPT_CODE, SALARY
+FROM EMPLOYEE
+WHERE SALARY > 3000000
+ORDER BY EMP_ID;
