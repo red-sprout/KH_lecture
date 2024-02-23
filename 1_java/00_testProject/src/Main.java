@@ -4,84 +4,53 @@ import java.util.*;
 // [BOJ] 전력난 / 골드 4 / 40분
 // 알고리즘 분류 : 그래프 이론 / 최소 스패닝 트리
 public class Main {
-	private static int m, n;
-	private static int[] parent;
-	
-	static class Road implements Comparable<Road>{
-		int x, y, cost;
-		
-		public Road(int x, int y, int cost) {
-			this.x = Math.min(x, y);
-			this.y = Math.max(x, y);
-			this.cost = cost;
-		}
-
-		@Override
-		public int compareTo(Road n) {
-			return this.cost - n.cost;
-		}
-	}
-	
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
         
-        while(true) {
-        	st = new StringTokenizer(br.readLine());
-        	m = Integer.parseInt(st.nextToken());
-            n = Integer.parseInt(st.nextToken());
-            
-            if(m == 0 && n == 0) break;
-            
-            parent = new int[m];
-            Road[] roads = new Road[n];
-            
-            int x, y, z;
-            int ans = 0;
-            int distance = 0;
-            for(int i = 0; i < m; i++) {
-            	parent[i] = i;
-            }
-            
-            for(int i = 0; i < n; i++) {
-            	st = new StringTokenizer(br.readLine());
-            	x = Integer.parseInt(st.nextToken());
-            	y = Integer.parseInt(st.nextToken());
-            	z = Integer.parseInt(st.nextToken());
-            	
-            	roads[i] = new Road(x, y, z);
-            	ans += z;
-            }
-
-            Arrays.sort(roads);
-            
-            for(Road r : roads) {
-            	if(isUnion(r.x, r.y)) continue;
-            	unionParent(r.x, r.y);
-            	distance += r.cost;
-            }
-            
-            sb.append(ans - distance).append("\n");
+        String password = br.readLine();
+        String part = null;
+        
+        int[] dp = new int[password.length() + 1];
+        boolean flag = false;
+        dp[0] = 1;
+        
+        for(int i = 1; i <= password.length(); i++) {
+        	if(i == 1) {
+        		if(!isAlphabet(password.substring(0, 1))) {
+        			flag = true;
+        			break;
+        		}
+        		dp[1] = 1;
+        		continue;
+        	} 
+        	
+        	part = password.substring(i - 2, i);
+        	if(isAlphabet(part.substring(1, 2))) {
+        		dp[i] += dp[i - 1];
+        	}
+        	if(isAlphabet(part)) {
+        		dp[i] += dp[i - 2];
+        	}
+        	
+        	if(dp[i] == 0) {
+        		flag = true;
+        		break;
+        	}
         }
         
-        System.out.print(sb);
+        if(flag) {
+        	System.out.println(0);
+        } else {
+        	System.out.println(dp[password.length()]);
+        }
+        
         br.close();
     }
     
-    public static int getParent(int a) {
-    	if(a == parent[a]) return a;
-    	return parent[a] = getParent(parent[a]);
-    }
-    
-    public static void unionParent(int a, int b) {
-    	a = getParent(a);
-    	b = getParent(b);
-    	if(a > b) parent[a] = b;
-    	else parent[b] = a;
-    }
-    
-    public static boolean isUnion(int a, int b) {
-    	return getParent(a) == getParent(b);
+    public static boolean isAlphabet(String part) {
+    	if(part.charAt(0) == '0') return false;
+    	
+    	int i = (char)Integer.parseInt(part);
+    	return i >= 1 && i <= 26;
     }
 }
