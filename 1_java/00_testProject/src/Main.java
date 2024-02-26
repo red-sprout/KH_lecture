@@ -1,56 +1,43 @@
 import java.io.*;
 import java.util.*;
 
-// [BOJ] 전력난 / 골드 4 / 40분
-// 알고리즘 분류 : 그래프 이론 / 최소 스패닝 트리
+// [BOJ] 극장 좌석 / 실버 1 / 15분
+// 알고리즘 분류 : 다이나믹 프로그래밍
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
-        String password = br.readLine();
-        String part = null;
+        int n = Integer.parseInt(br.readLine());
+        int m = Integer.parseInt(br.readLine());
+        int[] dp = new int[41];
+        List<Integer> vip = new ArrayList<>();
         
-        int[] dp = new int[password.length() + 1];
-        boolean flag = false;
         dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
         
-        for(int i = 1; i <= password.length(); i++) {
-        	if(i == 1) {
-        		if(!isAlphabet(password.substring(0, 1))) {
-        			flag = true;
-        			break;
-        		}
-        		dp[1] = 1;
+        for(int i = 3; i <= 40; i++) {
+        	dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        
+        for(int i = 0; i < m; i++) {
+        	vip.add(Integer.parseInt(br.readLine()));
+        }
+        
+        int length = 0;
+        int ans = 1;
+        for(int i = 1; i <= n; i++) {
+        	if(vip.contains(i)) {
+        		ans *= dp[length];
+        		length = 0;
         		continue;
-        	} 
-        	
-        	part = password.substring(i - 2, i);
-        	if(isAlphabet(part.substring(1, 2))) {
-        		dp[i] += dp[i - 1];
         	}
-        	if(isAlphabet(part)) {
-        		dp[i] += dp[i - 2];
-        	}
-        	
-        	if(dp[i] == 0) {
-        		flag = true;
-        		break;
-        	}
+        	length++;
         }
         
-        if(flag) {
-        	System.out.println(0);
-        } else {
-        	System.out.println(dp[password.length()]);
-        }
+        ans *= dp[length];
         
+        System.out.println(ans);
         br.close();
-    }
-    
-    public static boolean isAlphabet(String part) {
-    	if(part.charAt(0) == '0') return false;
-    	
-    	int i = (char)Integer.parseInt(part);
-    	return i >= 1 && i <= 26;
     }
 }
