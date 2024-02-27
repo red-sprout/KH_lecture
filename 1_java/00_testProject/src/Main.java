@@ -1,69 +1,58 @@
 import java.io.*;
 import java.util.*;
 
-// [BOJ] 개미굴 / 골드 3 / 40분
-// 알고리즘 분류 : 자료 구조 / 문자열 / 트리 / 트라이
+// [BOJ] 외판원 순회 / 골드 1 / 
+// 알고리즘 분류 : 
 public class Main {
-	private static StringBuilder sb = new StringBuilder();
-	
-	static class Node {
-		Map<String, Node> child = new TreeMap<>();
-		boolean end;
-	}
-	
-	static class Trie {
-		Node root = new Node();
-		void insert(String[] arr) {
-			Node node = this.root;
-			for(int i = 0; i < arr.length; i++) {
-				if(!node.child.containsKey(arr[i])) {
-					node.child.put(arr[i], new Node());
-				}
-				node = node.child.get(arr[i]);
-			}
-			node.end = true;
-		}
-		void search(int depth) {
-			search(depth, root);
-		}
-		void search(int depth, Node node) {
-			if(node.end == true) {
-				return;
-			}
-			
-			for(String key : node.child.keySet()) {
-				for(int i = 0; i < depth; i++) {
-					sb.append("--");
-				}
-				sb.append(key).append("\n");
-				search(depth + 1, node.child.get(key));
-			}
-		}
-	}
+	private static int n;
+	private static int[][] w, dp;
+	private static final int INF = 16000001;
 	
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        Trie trie = new Trie();
         StringTokenizer st;
         
-        int n;
-        int k;
-        String[] arr;
-        
         n = Integer.parseInt(br.readLine());
+        w = new int[n][n];
         
         for(int i = 0; i < n; i++) {
         	st = new StringTokenizer(br.readLine());
-        	k = Integer.parseInt(st.nextToken());
-        	arr = new String[k];
-        	for(int j = 0; j < k; j++) {
-        		arr[j] = st.nextToken();
+        	for(int j = 0; j < n; j++) {
+        		w[i][j] = Integer.parseInt(st.nextToken());
         	}
-        	trie.insert(arr);
         }
-
-        trie.search(0);
-        System.out.print(sb);
+        
+        dp = new int[n][(1 << n) - 1];
+        
+        for(int i = 0; i < n; i++) {
+        	for(int j = 0; j < n; j++) {
+        		dp[i][j] = -1;
+        	}
+        }
+        
+        System.out.println(tsp(0, 1));
+        
         br.close();
+    }
+    
+    // now : 현재 있는 도시
+    // visit : 이미 방문(비트마스킹)
+    public static int tsp(int now, int visit) {
+    	if(visit == (1 << n) - 1) {
+    		if(w[now][0] > 0) {
+    			return w[now][0];
+    		}
+    		return INF;
+    	}
+    	
+    	 if(dp[now][visit] != -1) return dp[now][visit];
+         dp[now][visit] = INF;
+
+         for(int i = 0; i < n; i++) {
+             if((visit & (1 << i)) == 0 && w[now][i] != 0) {
+                 dp[now][visit] = Math.min(tsp(i, visit | (1 << i)) + w[now][i], dp[now][visit]);
+             }
+         }
+         return dp[now][visit];
     }
 }
