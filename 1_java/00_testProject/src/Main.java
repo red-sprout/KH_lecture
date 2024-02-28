@@ -1,8 +1,8 @@
 import java.io.*;
 import java.util.*;
 
-// [BOJ] 외판원 순회 / 골드 1 / 
-// 알고리즘 분류 : 
+// [BOJ] 외판원 순회 / 골드 1 / 시간 미지정
+// 알고리즘 분류 : 다이나믹 프로그래밍 / 비트마스킹 / 비트필드를 이용한 다이나믹 프로그래밍 / 외판원 순회 문제
 public class Main {
 	private static int n;
 	private static int[][] w, dp;
@@ -24,12 +24,6 @@ public class Main {
         
         dp = new int[n][(1 << n) - 1];
         
-        for(int i = 0; i < n; i++) {
-        	for(int j = 0; j < n; j++) {
-        		dp[i][j] = -1;
-        	}
-        }
-        
         System.out.println(tsp(0, 1));
         
         br.close();
@@ -45,7 +39,7 @@ public class Main {
     		return INF;
     	}
     	
-    	 if(dp[now][visit] != -1) return dp[now][visit];
+    	 if(dp[now][visit] != 0) return dp[now][visit];
          dp[now][visit] = INF;
 
          for(int i = 0; i < n; i++) {
