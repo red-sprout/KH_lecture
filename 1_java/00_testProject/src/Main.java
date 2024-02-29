@@ -1,52 +1,30 @@
 import java.io.*;
 import java.util.*;
 
-// [BOJ] 외판원 순회 / 골드 1 / 시간 미지정
-// 알고리즘 분류 : 다이나믹 프로그래밍 / 비트마스킹 / 비트필드를 이용한 다이나믹 프로그래밍 / 외판원 순회 문제
+// [BOJ] 공통 부분 문자열 / 골드 5 / 
+// 알고리즘 분류 : 다이나믹 프로그래밍
 public class Main {
-	private static int n;
-	private static int[][] w, dp;
-	private static final int INF = 16000001;
-	
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+
+        String str1 = br.readLine();
+        String str2 = br.readLine();
         
-        n = Integer.parseInt(br.readLine());
-        w = new int[n][n];
+        int row = str1.length();
+        int col = str2.length();
+        int[][] dp = new int[row + 1][col + 1];
         
-        for(int i = 0; i < n; i++) {
-        	st = new StringTokenizer(br.readLine());
-        	for(int j = 0; j < n; j++) {
-        		w[i][j] = Integer.parseInt(st.nextToken());
+        int max = 0;
+        for(int i = 1; i <= row; i++) {
+        	for(int j = 1; j <= col; j++) {
+        		if(str1.charAt(i - 1) == str2.charAt(j - 1)) {
+        			dp[i][j] = dp[i - 1][j - 1] + 1;
+        			max = Math.max(dp[i][j], max);
+        		}
         	}
         }
         
-        dp = new int[n][(1 << n) - 1];
-        
-        System.out.println(tsp(0, 1));
-        
+        System.out.println(max);
         br.close();
-    }
-    
-    // now : 현재 있는 도시
-    // visit : 이미 방문(비트마스킹)
-    public static int tsp(int now, int visit) {
-    	if(visit == (1 << n) - 1) {
-    		if(w[now][0] > 0) {
-    			return w[now][0];
-    		}
-    		return INF;
-    	}
-    	
-    	 if(dp[now][visit] != 0) return dp[now][visit];
-         dp[now][visit] = INF;
-
-         for(int i = 0; i < n; i++) {
-             if((visit & (1 << i)) == 0 && w[now][i] != 0) {
-                 dp[now][visit] = Math.min(tsp(i, visit | (1 << i)) + w[now][i], dp[now][visit]);
-             }
-         }
-         return dp[now][visit];
     }
 }
