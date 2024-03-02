@@ -1,30 +1,54 @@
 import java.io.*;
 import java.util.*;
 
-// [BOJ] 공통 부분 문자열 / 골드 5 / 
-// 알고리즘 분류 : 다이나믹 프로그래밍
+// [BOJ]  /  / 
+// 알고리즘 분류 : 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        String str1 = br.readLine();
-        String str2 = br.readLine();
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
         
-        int row = str1.length();
-        int col = str2.length();
-        int[][] dp = new int[row + 1][col + 1];
+        int t = Integer.parseInt(br.readLine());
         
-        int max = 0;
-        for(int i = 1; i <= row; i++) {
-        	for(int j = 1; j <= col; j++) {
-        		if(str1.charAt(i - 1) == str2.charAt(j - 1)) {
-        			dp[i][j] = dp[i - 1][j - 1] + 1;
-        			max = Math.max(dp[i][j], max);
-        		}
+        boolean[] status1;
+        boolean[] status2;
+        
+        for(int i = 0; i < t; i++) {
+        	st = new StringTokenizer(br.readLine());
+        	int x1 = Integer.parseInt(st.nextToken());
+        	int y1 = Integer.parseInt(st.nextToken());
+        	int x2 = Integer.parseInt(st.nextToken());
+        	int y2 = Integer.parseInt(st.nextToken());
+        	
+        	int n = Integer.parseInt(br.readLine());
+        	
+        	status1 = new boolean[n];
+        	status2 = new boolean[n];
+        	
+        	for(int j = 0; j < n; j++) {
+            	st = new StringTokenizer(br.readLine());
+            	int cx = Integer.parseInt(st.nextToken());
+            	int cy = Integer.parseInt(st.nextToken());
+            	int r = Integer.parseInt(st.nextToken());
+            	
+            	int dsquare1 = (cx - x1) * (cx - x1) + (cy - y1) * (cy - y1);
+            	int dsquare2 = (cx - x2) * (cx - x2) + (cy - y2) * (cy - y2);
+            	
+            	status1[j] = dsquare1 < r * r;
+            	status2[j] = dsquare2 < r * r;
         	}
+        	
+        	int result = 0;
+        	for(int j = 0; j < n; j++) {
+        		if(status1[j] != status2[j]) 
+        			result++;
+        	}
+        	
+        	sb.append(result).append("\n");
         }
         
-        System.out.println(max);
+        System.out.print(sb);
         br.close();
     }
 }
