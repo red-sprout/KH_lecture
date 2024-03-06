@@ -1,8 +1,8 @@
 import java.io.*;
 import java.util.*;
 
-// [BOJ]  /  / 
-// 알고리즘 분류 : 
+// [BOJ] 큐빙 / 플레티넘 5 / 4시간
+// 알고리즘 분류 : 구현 / 시뮬레이션
 public class Main {
 	static char[][] up, down, front, back, left, right;
 	static StringBuilder sb = new StringBuilder();
@@ -41,19 +41,24 @@ public class Main {
             		break;
             	case 'F':
             		rFront(clockwise);
+            		rotation = "R" + rotation.charAt(1);
             		break;
             	case 'B':
             		rBack(clockwise);
+            		rotation = "L" + rotation.charAt(1);
             		break;
             	case 'L':
             		rLeft(clockwise);
+            		rotation = "F" + rotation.charAt(1);
             		break;
             	case 'R':
             		rRight(clockwise);
+            		rotation = "B" + rotation.charAt(1);
             		break;
             	}
             }
             print(up);
+            
         }
         
         System.out.print(sb);
@@ -166,7 +171,7 @@ public class Main {
     		for(int i = 0; i < 3; i++) up[0][i] = tmp[i];
     	} else {
     		back = counterclockwise(back);
-    		for(int i = 0; i < 3; i++) right[i][2] = up[i][2];
+    		for(int i = 0; i < 3; i++) right[i][2] = up[0][i];
     		for(int i = 0; i < 3; i++) up[0][2 - i] = left[i][0];
     		for(int i = 0; i < 3; i++) left[i][0] = down[2][i];
     		for(int i = 0; i < 3; i++) down[2][i] = tmp[2 - i];
