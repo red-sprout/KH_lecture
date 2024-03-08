@@ -7,7 +7,7 @@ public class Main {
 	static int n, l, r;
 	static boolean[][] visited;
 	static int[][] map;
-	static List<List<int[]>> unionList = new ArrayList<>();
+	static List<List<int[]>> unionList = new LinkedList<>();
 	
 	static int[] dr = {1, 0, -1, 0};
 	static int[] dc = {0, 1, 0, -1};
@@ -61,11 +61,8 @@ public class Main {
         		}
         	}
         	
+        	unionList.clear();
         	day++;
-        	System.out.println(day);
-        	for(int j = 0; j < n; j++) {
-    			System.out.println(Arrays.toString(map[j]));
-    		}
         }
         
         System.out.println(day);
@@ -85,6 +82,7 @@ public class Main {
     		if(visited[nextRow][nextCol]) {
     			continue;
     		}
+    		visited[row][col] = true;
     		difference = Math.abs(map[row][col] - map[nextRow][nextCol]);
     		if(difference >= l && difference <= r) {
     			result = true;
@@ -100,7 +98,6 @@ public class Main {
     	Queue<int[]> q = new LinkedList<>();
     	int difference = 0;
     	
-    	visited[row][col] = true;
     	int[] first = {row, col};
     	union.add(first);
     	q.add(first);
