@@ -4,68 +4,148 @@ import java.util.*;
 // [BOJ]  /  / 
 // 알고리즘 분류 : 
 public class Main {
-	static int[] arr;
-	static int[] tmp;
-	static int result = -1;
-	static int cnt = 0;
-	static int n, k;
+	static int n, l, r;
+	static boolean[][] visited;
+	static int[][] map;
+	static List<List<int[]>> unionList = new ArrayList<>();
+	
+	static int[] dr = {1, 0, -1, 0};
+	static int[] dc = {0, 1, 0, -1};
 	
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
         
+        int day = 0;
+        boolean isMovable = true;
+        
         st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
-        k = Integer.parseInt(st.nextToken());
-        arr = new int[n];
-        tmp = new int[n];
+        l = Integer.parseInt(st.nextToken());
+        r = Integer.parseInt(st.nextToken());
+
+        visited = new boolean[n][n];
+        map = new int[n][n];
         
-        st = new StringTokenizer(br.readLine());
         for(int i = 0; i < n; i++) {
-        	arr[i] = Integer.parseInt(st.nextToken());
+        	st = new StringTokenizer(br.readLine());
+        	for(int j = 0; j < n; j++) {
+        		map[i][j] = Integer.parseInt(st.nextToken());
+        	}
         }
         
-        merge_sort(arr, 0, n - 1);
-        System.out.println(result);
+        while(true) {
+        	isMovable = false;
+        	for(int i = 0; i < n; i++) {
+        		for(int j = 0; j < n; j++) {
+        			if(visited[i][j]) {
+        				continue;
+        			}
+        			if(findMovablePlace(i, j)) {
+        				isMovable = true;
+        			}
+        		}
+        	}
+        	
+        	if(!isMovable) {
+        		break;
+        	}
+        	
+        	for(List<int[]> union : unionList) {
+        		setAvg(union);
+        	}
+        	
+        	for(int i = 0; i < n; i++) {
+        		for(int j = 0; j < n; j++) {
+        			visited[i][j] = false;
+        		}
+        	}
+        	
+        	day++;
+        	System.out.println(day);
+        	for(int j = 0; j < n; j++) {
+    			System.out.println(Arrays.toString(map[j]));
+    		}
+        }
+        
+        System.out.println(day);
         br.close();
     }
     
-    public static void merge_sort(int[] a, int p, int r) {
-    	if(p < r) {
-    		int q = (p + r) / 2;
-    		merge_sort(a, p, q);
-    		merge_sort(a, q + 1, r);
-    		merge(a, p, q, r);
-    	}
-    }
-    
-    public static void merge(int[] a, int p, int q, int r) {
-    	int i = p;
-    	int j = q + 1;
-    	int t = 0;
+    public static boolean findMovablePlace(int row, int col) {
+    	boolean result = false;
+    	int difference = 0;
     	
-    	while(i <= q && j <= r) {
-    		if(a[i] < a[j]) {
-    			tmp[t++] = a[i++];
-    		} else {
-    			tmp[t++] = a[j++];
+    	for(int i = 0; i < 4; i++) {
+    		int nextRow = row + dr[i];
+    		int nextCol = col + dc[i];
+    		if(nextRow < 0 || nextRow >= n || nextCol < 0 || nextCol >= n) {
+    			continue;
+    		}
+    		if(visited[nextRow][nextCol]) {
+    			continue;
+    		}
+    		difference = Math.abs(map[row][col] - map[nextRow][nextCol]);
+    		if(difference >= l && difference <= r) {
+    			result = true;
+    			bfs(row, col);
     		}
     	}
     	
-    	while(i <= q) tmp[t++] = a[i++];
-    	while(j <= r) tmp[t++] = a[j++];
+    	return result;
+    }
+    
+    public static void bfs(int row, int col) {
+    	List<int[]> union = new ArrayList<>();
+    	Queue<int[]> q = new LinkedList<>();
+    	int difference = 0;
     	
-    	i = p;
-    	t = 0;
+    	visited[row][col] = true;
+    	int[] first = {row, col};
+    	union.add(first);
+    	q.add(first);
     	
-    	while(i <= r) {
-    		cnt++;
-
-            if(cnt == k){
-                result = tmp[t];
-            }
-            
-            a[i++] = tmp[t++];
+    	while(!q.isEmpty()) {
+    		int[] now = q.poll();
+    		int nowRow = now[0];
+    		int nowCol = now[1];
+    		for(int i = 0; i < 4; i++) {
+    			int nextRow = nowRow + dr[i];
+    			int nextCol = nowCol + dc[i];
+    			
+    			if(nextRow < 0 || nextRow >= n || nextCol < 0 || nextCol >= n) {
+        			continue;
+        		}
+    			
+        		if(visited[nextRow][nextCol]) {
+        			continue;
+        		}
+        		
+        		difference = Math.abs(map[nowRow][nowCol] - map[nextRow][nextCol]);
+        		if(difference >= l && difference <= r) {
+        			visited[nextRow][nextCol] = true;
+        			int[] next = {nextRow, nextCol};
+        			union.add(next);
+        			q.add(next);
+        		}
+    		}
+    	}
+    	
+    	unionList.add(union);
+    }
+    
+    public static int getAvg(List<int[]> union) {
+    	int result = 0;
+    	for(int[] p : union) {
+    		result += map[p[0]][p[1]];
+    	}
+    	return result / union.size();
+    }
+    
+    public static void setAvg(List<int[]> union) {
+    	int avg = getAvg(union);
+    	for(int[] p : union) {
+    		map[p[0]][p[1]] = avg;
     	}
     }
 }
