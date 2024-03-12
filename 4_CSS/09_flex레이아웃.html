@@ -1,69 +1,86 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flex</title>
     <style>
-        .container{
+        .container {
             border: 3px solid black;
             display: flex;
             flex-direction: row;
-            /* flex-direction: row | column */
+            /* flex-direction: row(수평) | column(수직) | row-reverse | column-reverse */
+            /* 자식요소들을 정렬시 주축을 어떤방향으로 할것인가? */
         }
-        .flex-item{
+
+        .flex-item {
             color: black;
             font-size: 50px;
             padding: 24px;
             text-align: center;
             border: 1px solid red;
+            width: 100px;
         }
-        .item1{
+
+        .item1 {
             background: yellow;
         }
-        .item2{
+
+        .item2 {
             background: green;
         }
-        .item3{
+
+        .item3 {
             background: red;
         }
-        .item4{
+
+        .item4 {
             background: aqua;
         }
-        .item5{
+
+        .item5 {
             background: gray;
         }
-        .item6{
+
+        .item6 {
             background: blue;
         }
 
-        .container2{
+        .container2 {
             border: 3px solid black;
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             /* flex-direction: row | column */
         }
-        .flex-item2{
+
+        .flex-item2 {
             color: black;
             font-size: 50px;
             padding: 24px;
             text-align: center;
             border: 1px solid red;
             width: calc(50% - 50px);
-        }.container3{
+        }
+
+        .container3 {
             border: 3px solid black;
             display: flex;
             flex-direction: row;
             width: 100%;
             height: 800px;
-            align-items: flex-start;
+            justify-content: center;
+            /* 주축의 정렬을 어떻게 할것인가? */
             /*flex-direction: row일 때 flex-end 상하기준 뒤쪽정렬
                                         flex-start 상하기준 */
-            justify-content: center;
-            
+            align-items: flex-start;
+            /* 교차축의 정렬을 어떻게 할것인가? */
+            /*flex-direction: row일 때 flex-end 상하기준 뒤쪽정렬
+                                        flex-start 상하기준 */
         }
-        .flex-item03{
+
+        .flex-item03 {
             color: black;
             font-size: 50px;
             padding: 24px;
@@ -71,13 +88,14 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Flex 레이아웃</h1>
-    <p>웹페이지 레이아웃을 효율적으로 구성하기위한 기술, flexbox를 사용하면 요소들을 부모 컨테이너 내에서 유연하게 정렬하고 배치할 수 있다.</p>
+    <p>웹페이지 레이아웃을 효율적으로 구성하기위한 기술. flexbox를 사용하면 요소들을 부모 컨테이너 내에서 유연하게 정렬하고 배치할 수 있다.</p>
 
     <div class="container">
-        <div class="flex-item item1">1번</div>
-        <div class="flex-item item2">2번</div>
+        <div class="flex-item item1" style="flex: 1;">1번</div>
+        <div class="flex-item item2" style="flex: 2;">2번</div>
         <div class="flex-item item3">3번</div>
     </div>
 
@@ -87,9 +105,9 @@
         <div class="flex-item2 item1">1번</div>
         <div class="flex-item2 item2">2번</div>
         <div class="flex-item2 item3">3번</div>
-        <div class="flex-item2 item4">1번</div>
-        <div class="flex-item2 item5">2번</div>
-        <div class="flex-item2 item6">3번</div>
+        <div class="flex-item2 item4">4번</div>
+        <div class="flex-item2 item5">5번</div>
+        <div class="flex-item2 item6">6번</div>
     </div>
 
     <hr>
@@ -100,4 +118,5 @@
         <div class="flex-item3 item3">3번</div>
     </div>
 </body>
+
 </html>
