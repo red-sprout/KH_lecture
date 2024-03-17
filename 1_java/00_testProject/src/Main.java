@@ -45,9 +45,14 @@ public class Main {
         		continue;
         	}
         	
-        	for(MyList.ListNode node = nowList.head; node != null; node = node.next) {
+        	for(ListNode node = nowList.getHead(); node != null; node = node.next) {
         		if(visited[node.data]) continue;
+        		
+        		prev[node.data]--;
+        		if(prev[node.data] != 0) continue;
+        		
         		q.add(node.data);
+        		
         		visited[node.data] = true;
         	}
         }
@@ -58,26 +63,35 @@ public class Main {
     }
 }
 
-class MyList {
-	ListNode head;
-	ListNode tail;
+class ListNode {
+	int data;
+	ListNode next = null;
 	
-	class ListNode {
-		int data;
-		ListNode next = null;
-		
-		ListNode(int data) {
-			this.data = data;
-		}
+	ListNode(int data) {
+		this.data = data;
 	}
+}
+
+class MyList {
+	private ListNode head;
+	private ListNode tail;
 	
 	public MyList(int data) {
 		this.head = new ListNode(data);
 		this.tail = this.head;
 	}
 	
+	public ListNode getHead() {
+		return this.head;
+	}
+	
 	public void add(int data) {
 		ListNode node = new ListNode(data);
+		if(head.data == tail.data) {
+			head.next = node;
+			tail = node;
+			return;
+		}
 		tail.next = node;
 		tail = node;
 	}
