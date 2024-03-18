@@ -1,140 +1,147 @@
 import java.io.*;
 
+/*
+ * push_front X: 정수 X를 덱의 앞에 넣는다.
+ * push_back X: 정수 X를 덱의 뒤에 넣는다.
+ * pop_front: 덱의 가장 앞에 있는 수를 빼고, 그 수를 출력한다. 만약, 덱에 들어있는 정수가 없는 경우에는 -1을 출력한다.
+ * pop_back: 덱의 가장 뒤에 있는 수를 빼고, 그 수를 출력한다. 만약, 덱에 들어있는 정수가 없는 경우에는 -1을 출력한다.
+ * size: 덱에 들어있는 정수의 개수를 출력한다.
+ * empty: 덱이 비어있으면 1을, 아니면 0을 출력한다.
+ * front: 덱의 가장 앞에 있는 정수를 출력한다. 만약 덱에 들어있는 정수가 없는 경우에는 -1을 출력한다.
+ * back: 덱의 가장 뒤에 있는 정수를 출력한다. 만약 덱에 들어있는 정수가 없는 경우에는 -1을 출력한다.
+ */
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         StringBuilder sb = new StringBuilder();
-        MyQueue q = new MyQueue();
-        
-        String[] arr = br.readLine().split(" ");
-        int n = Integer.parseInt(arr[0]);
-        int m = Integer.parseInt(arr[1]);
-        int[] prev = new int[n + 1];
-        boolean[] visited = new boolean[n + 1];
-        MyList[] next = new MyList[n + 1];
-        
-        for(int i = 0; i < m; i++) {
-        	arr = br.readLine().split(" ");
-        	int a = Integer.parseInt(arr[0]);
-            int b = Integer.parseInt(arr[1]);
-            
-            prev[b]++;
-            
-            if(next[a] == null) {
-            	next[a] = new MyList(b);
-            } else {
-            	next[a].add(b);
-            }
-        }
-        
-        for(int i = 1; i <= n; i++) {
-        	if(prev[i] == 0) {
-        		q.add(i);
-        		visited[i] = true;
+        MyDeque deque = new MyDeque();
+        int n = Integer.parseInt(br.readLine());
+        for (int i = 0; i < n; i++) {
+        	String[] command = br.readLine().split(" ");
+        	switch(command[0]) {
+        	case "push_front":
+        		deque.pushFront(Integer.parseInt(command[1]));
+        		break;
+        	case "push_back":
+        		deque.pushBack(Integer.parseInt(command[1]));
+        		break;
+        	case "pop_front":
+        		sb.append(deque.popFront()).append("\n");
+        		break;
+        	case "pop_back":
+        		sb.append(deque.popBack()).append("\n");
+        		break;
+        	case "size":
+        		sb.append(deque.size()).append("\n");
+        		break;
+        	case "empty":
+        		sb.append(deque.empty()).append("\n");
+        		break;
+        	case "front":
+        		sb.append(deque.front()).append("\n");
+        		break;
+        	case "back":
+        		sb.append(deque.back()).append("\n");
+        		break;
         	}
         }
-        
-        while(!q.isEmpty()) {
-        	int now = q.remove();
-        	MyList nowList = next[now];
-        	
-        	sb.append(now).append(" ");
-        	
-        	if(nowList == null) {
-        		continue;
-        	}
-        	
-        	for(ListNode node = nowList.getHead(); node != null; node = node.next) {
-        		if(visited[node.data]) continue;
-        		
-        		prev[node.data]--;
-        		if(prev[node.data] != 0) continue;
-        		
-        		q.add(node.data);
-        		
-        		visited[node.data] = true;
-        	}
-        }
-        
-        System.out.println(sb.toString());
+        System.out.print(sb.toString());
         
         br.close();
     }
 }
 
-class ListNode {
+class Node {
 	int data;
-	ListNode next = null;
+	Node prev;
+	Node next;
 	
-	ListNode(int data) {
+	Node(int data) {
 		this.data = data;
+		this.prev = null;
+		this.next = null;
 	}
 }
 
-class MyList {
-	private ListNode head;
-	private ListNode tail;
-	
-	public MyList(int data) {
-		this.head = new ListNode(data);
-		this.tail = this.head;
-	}
-	
-	public ListNode getHead() {
-		return this.head;
-	}
-	
-	public void add(int data) {
-		ListNode node = new ListNode(data);
-		if(head.data == tail.data) {
-			head.next = node;
-			tail = node;
-			return;
-		}
-		tail.next = node;
-		tail = node;
-	}
-}
-
-class MyQueue {
+class MyDeque {
 	private int size = 0;
 	private Node front = null;
-	private Node rear = null;
+	private Node back = null;
 	
-	class Node {
-		int data;
-		Node prev = null;
-		Node next = null;
-		
-		Node(int data) {
-			this.data = data;
-		}
-	}
-	
-	public void add(int x) {
+	public void pushFront(int x) {
 		Node node = new Node(x);
+		
 		if(size == 0) {
 			front = node;
-			rear = node;
+			back = node;
 			size++;
 			return;
 		}
 		
-		node.prev = rear;
-		rear.next = node;
-		rear = node;
+		node.next = front;
+		front.prev = node;
+		front = node;
 		size++;
 	}
 	
-	public int remove() {
+	public void pushBack(int x) {
+		Node node = new Node(x);
+		
+		if(size == 0) {
+			front = node;
+			back = node;
+			size++;
+			return;
+		}
+		
+		node.prev = back;
+		back.next = node;
+		back = node;
+		size++;
+	}
+	
+	public int popFront() {
+		if(size == 0) {
+			return -1;
+		}
+		
 		Node node = front;
 		front = node.next;
 		size--;
 		return node.data;
 	}
 	
-	public boolean isEmpty() {
-		return size == 0;
+	public int popBack() {
+		if(size == 0) {
+			return -1;
+		}
+		
+		Node node = back;
+		back = node.prev;
+		size--;
+		return node.data;
+	}
+	
+	public int size() {
+		return size;
+	}
+	
+	public int empty() {
+		return (size == 0) ? 1 : 0;
+	}
+	
+	public int front() {
+		if(size == 0) {
+			return -1;
+		}
+		return front.data;
+	}
+	
+	public int back() {
+		if(size == 0) {
+			return -1;
+		}
+		return back.data;
 	}
 }
