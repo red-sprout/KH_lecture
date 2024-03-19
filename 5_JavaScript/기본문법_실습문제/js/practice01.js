@@ -4,14 +4,15 @@ function selectCheckBox() {
     const label = document.querySelectorAll(".select label");
 
     result.innerHTML = "";
-    let isFirst = true;
-    for (let i in check) {
+    for (let i = 0; i < check.length; i = i + 2) {
         if (check[i].checked) {
-            if (!isFirst) {
-                result.innerHTML += ", "
-            }
-            isFirst = false;
-            result.innerHTML += `${label[i].textContent}`;
+            result.innerHTML += `${label[i].textContent} `;
+        }
+    }
+
+    for (let i = 1; i < check.length; i = i + 2) {
+        if (check[i].checked) {
+            result.innerHTML += `${label[i].textContent} `;
         }
     }
 }
@@ -29,11 +30,12 @@ function checkBoxTrigger() {
     let hobbyList = document.getElementsByName("hobby");
 
     let isAllChecked = true;
-    for(let checkBox of hobbyList) {
-        if(!checkBox.checked) {
+    for (let checkBox of hobbyList) {
+        if (!checkBox.checked) {
             isAllChecked = false;
             break;
         }
-        
     }
+
+    allCheckBox.checked = isAllChecked;
 }

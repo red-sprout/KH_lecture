@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice 3</title>
+    <style>
+        .pass {
+            color: green;
+        }
+
+        .not-pass {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Practice3</h1>
+    <form action="#">
+        <fieldset>
+            <legend>회원가입</legend>
+            <div>아이디 : <input type="text" name="insert" id="id"></div><br>
+            <div>비밀번호 : <input type="password" name="insert" id="password"></div><br>
+            <div>비밀번호 확인 : <input type="password" name="insert" id="check"></div><br>
+            <div>이름 : <input type="text" name="insert" id="name"></div><br>
+            <button onclick="return validate();">회원가입</button>
+        </fieldset>
+    </form>
+    <script src="js/practice03.js" rel="JavaScript"></script>
+</body>
+
+</html>
