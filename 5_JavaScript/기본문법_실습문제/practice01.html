@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice 1</title>
+    <style>
+        #field{
+            display: flex;
+        }
+
+        #result{
+            border: 1px solid red;
+            height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Pratice 1</h1>
+    <form action="test.do">
+        <fieldset id="field">
+            <legend>취미</legend>
+            <div>
+                <input type="checkbox" name="all" id="all" onchange="allCheck()">
+                <label for="all">전체선택</label>
+            </div>
+            <div class="select">
+                <input type="checkbox" name="hobby" id="total" onchange="checkBoxTrigger()">
+                <label for="total">종합</label><br>
+                <input type="checkbox" name="hobby" id="trip" onchange="checkBoxTrigger()">
+                <label for="trip">여행</label>
+            </div>
+            <div class="select">
+                <input type="checkbox" name="hobby" id="novel" onchange="checkBoxTrigger()">
+                <label for="novel">소설</label><br>
+                <input type="checkbox" name="hobby" id="science" onchange="checkBoxTrigger()">
+                <label for="science">과학</label>
+            </div>
+            <div class="select">
+                <input type="checkbox" name="hobby" id="essay" onchange="checkBoxTrigger()">
+                <label for="essay">시/에세이</label><br>
+                <input type="checkbox" name="hobby" id="history" onchange="checkBoxTrigger()">
+                <label for="history">역사/문화</label>
+            </div>
+            <div class="select">
+                <input type="checkbox" name="hobby" id="economy" onchange="checkBoxTrigger()">
+                <label for="economy">경제/경영</label><br>
+                <input type="checkbox" name="hobby" id="foreign" onchange="checkBoxTrigger()">
+                <label for="foreign">외국어</label>
+            </div>
+            <div class="select">
+                <input type="checkbox" name="hobby" id="develop" onchange="checkBoxTrigger()">
+                <label for="develop">자기계발</label><br>
+                <input type="checkbox" name="hobby" id="computer" onchange="checkBoxTrigger()">
+                <label for="computer">컴퓨터</label>
+            </div>
+            <div class="select">
+                <input type="checkbox" name="hobby" id="child" onchange="checkBoxTrigger()">
+                <label for="child">아동</label><br>
+                <input type="checkbox" name="hobby" id="comics" onchange="checkBoxTrigger()">
+                <label for="comics">만화</label>
+            </div>
+        </fieldset>
+    </form>
+
+    <br>
+
+    <button onclick="selectCheckBox()">카테고리 선택</button>
+    <div id="result"></div>
+    <script src="js/practice01.js" rel="JavaScript"></script>
+</body>
+
+</html>
