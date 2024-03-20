@@ -146,13 +146,23 @@
     </script>
 
     <form action="test.do">
-        아이디 : <input type="text" name="userId">
+        아이디 : <input type="text" name="userId" id="user_id">
         <input type="submit" onclick="return validate();">
     </form>
 
     <script>
         function validate(){
-            return false;
+            // 영문자 또는 숫자로만 5~12글자이하가 맞는지
+            // 조건에 부합하면 return x
+            // 조건에 맞지 않으면 return false;
+
+            const userId = document.getElementById('user_id').value;
+            const regRxp = /^[a-zA-Z0-9]{5,12}$/;
+            if (!regRxp.test(userId)) { // regRxp.test(userId) => 조건에 부합하지 않을 때 false
+                alert("유효한 아이디가 아닙니다.");
+                return false;
+            }
+            return true;
         }
     </script>
 </body>
