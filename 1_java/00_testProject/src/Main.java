@@ -1,79 +1,77 @@
 import java.io.*;
 
-class MyStack {
-	private int back;
-	private int[] list;
-	
-	private static final int SIZE = 1000;
-	
-	MyStack() {
-		this.back = 0;
-		this.list = new int[SIZE];
-	}
-	
-	public void push(int data) {
-		list[back++] = data;
-	}
-	
-	public int pop() {
-		if(back == 0) {
-			return -1;
-		}
-		int data = list[--back];
-		return data;
-	}
-	
-	public int peek() {
-		if(back == 0) {
-			return -1;
-		}
-		return list[back - 1];
-	}
-}
-
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
-        MyStack stack1 = new MyStack();
-        MyStack stack2 = new MyStack();
+        HashTable h = new HashTable(n);
+        StringBuilder sb = new StringBuilder();
+        String[] cards = br.readLine().split(" ");
         
-        String[] students = br.readLine().split(" ");
-        for(int i = 0; i < n; i++) {
-        	stack2.push(Integer.parseInt(students[i]));
+        for(String key : cards) {
+        	h.put(Integer.parseInt(key));
         }
         
-        for(int i = 0; i < n; i++) {
-        	stack1.push(stack2.pop());
-        }
+        int m = Integer.parseInt(br.readLine());
+        cards = br.readLine().split(" ");
         
-        boolean flag = false;
-        for(int i = 1; i <= n; i++) {
-        	int data = 0;
-        	if((data = stack2.peek()) == i) {
-        		data = stack2.pop();
-        		continue;
-        	}
-        	
-        	while(true) {
-        		data = stack1.peek();
-        		if(data == -1) {
-        			flag = true;
-        			break;
-        		}
-        		
-        		data = stack1.pop();
-        		if(data == i) {
-        			break;
-        		}
-        		stack2.push(data);
-        	}
-        	
-        	if(flag) break;
+        for(String key : cards) {
+        	sb.append(h.get(Integer.parseInt(key))).append(" ");
         }
-        System.out.println(flag ? "Sad" : "Nice");
+        System.out.println(sb);
         
         br.close();
     }
+}
+
+class HashTable {
+	class Node {
+		int key;
+		int value;
+		Node next;
+		Node(int key) {
+			this.key = key;
+			this.value = 1;
+			next = null;
+		}
+	}
+	
+	Node[] head;
+	private static final int CONST = 10000000;
+	
+	HashTable(int size) {
+		this.head = new Node[size];
+	}
+	
+	int getIdx(int key) {
+		return (key + CONST) % head.length;
+	}
+	
+	void put(int key) {
+		int idx = getIdx(key);
+		Node now = head[idx];
+		Node node = new Node(key);
+		if(now == null) {
+			head[idx] = node;
+			return;
+		}
+		while(true) {
+			if(now.key == key) {
+				now.value++;
+				return;
+			}
+			if(now.next == null) break;
+			now = now.next;
+		}
+		now.next = node;
+	}
+	
+	int get(int key) {
+		int idx = getIdx(key);
+		for(Node n = head[idx]; n != null; n = n.next) {
+			if(n.key == key) return n.value;
+		}
+		return 0;
+	}
 }
