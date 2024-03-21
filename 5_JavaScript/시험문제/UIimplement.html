@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI 구현</title>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            background: #deebf7;
+            display: flex;
+            align-items: center;
+            margin-top: 75px;
+        }
+
+        #total {
+            width: 800px;
+            height: 800px;
+            margin: auto;
+            border: 3px solid #e0e1e0;
+            background: #ededed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .content {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .name {
+            font-size: 30px;
+            font-weight: 600;
+            width: 250px;
+            height: 75px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .input {
+            background: none;
+            border: none;
+            font-size: 30px;
+            border-bottom-width: 3px;
+            border-bottom-style: dashed;
+            width: 450px;
+            box-sizing: border-box;
+        }
+
+        #total>div {
+            margin-bottom: 150px;
+        }
+
+        #total>button {
+            position: absolute;
+            width: 90%;
+            height: 120px;
+            background: #c5e0b4;
+            font-size: 30px;
+            font-weight: 600;
+            color: #456431;
+            border: none;
+            bottom: 40px;
+            cursor: pointer;
+        }
+
+        .msg {
+            height: 30px;
+            color: gray;
+            font-weight: 900;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .email {
+            background: none;
+            border: none;
+            font-size: 30px;
+            border-bottom-width: 3px;
+            border-bottom-style: dashed;
+            width: 200px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="total">
+        <div>
+            <div class="content">
+                <div class="name">
+                    아이디
+                </div>
+                <input class="input" id="id" type="text" required onblur="checkId();">
+            </div>
+            <div class="content msg hidden" id="hiddenId">
+                <div class="name"></div>
+                <p>필수 입력 항목 입니다</p>
+            </div>
+
+            <div class="content">
+                <div class="name">
+                    패스워드
+                </div>
+                <input class="input" id="pwd" type="password" onfocus="passwordClick();" onblur="passwordClick(); checkPwd();" required>
+            </div>
+            <div class="content msg hidden" id="hiddenCond">
+                <div class="name"></div>
+                <p>영문자 대/소문자 특수문자, 숫자 포함 8 ~ 32자</p>
+            </div>
+            <div class="content msg hidden" id="hiddenPwd">
+                <div class="name"></div>
+                <p>필수 입력 항목 입니다</p>
+            </div>
+
+            <div class="content">
+                <div class="name">
+                    패스워드 확인
+                </div>
+                <input class="input" id="pwd-check" type="password" required  onblur="checkPwdCheck();">
+            </div>
+            <div class="content msg hidden" id="hiddenCheck">
+                <div class="name"></div>
+                <p>필수 입력 항목 입니다</p>
+            </div>
+
+            <div class="content">
+                <div class="name">
+                    이메일
+                </div>
+                <input class="email" type="text">
+                <span style="font-size: 30px; font-weight: 600; width: 50px; text-align: center;">
+                    @
+                </span>
+                <input class="email" type="text">
+            </div>
+
+            <div class="content">
+                <div class="name">
+                    주소
+                </div>
+                <input class="input" type="text">
+            </div>
+
+            <div class="content">
+                <div class="name"></div>
+                <input class="input" type="text">
+            </div>
+        </div>
+        <button>가 입</button>
+    </div>
+    <script>
+        function passwordClick() {
+            const regRxp = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,32}$/;
+            const pwd = document.getElementById("pwd").value;
+            const hiddenArea = document.getElementById("hiddenCond");
+            
+            if(!regRxp.test(pwd)) {
+                hiddenArea.classList.remove("hidden");
+                return;
+            }
+
+            if(hiddenArea.classList.contains("hidden")) {
+                hiddenArea.classList.remove("hidden");
+            } else {
+                hiddenArea.classList.add("hidden");
+            }
+        }
+
+        function checkId() {
+            const id = document.getElementById("id").value;
+            const hiddenId = document.getElementById("hiddenId");
+            
+            if(id === "") {
+                hiddenId.classList.remove("hidden");
+            } else {
+                hiddenId.classList.add("hidden");
+            }
+        }
+
+        function checkPwd() {
+            const pwd = document.getElementById("pwd").value;
+            const hiddenPwd = document.getElementById("hiddenPwd");
+
+            if(pwd === "") {
+                hiddenPwd.classList.remove("hidden");
+            } else {
+                hiddenPwd.classList.add("hidden");
+            }
+        }
+
+        function checkPwdCheck() {
+            const check = document.getElementById("pwd-check").value;
+            const hiddenCheck = document.getElementById("hiddenCheck");
+
+            if(check === "") {
+                hiddenCheck.classList.remove("hidden");
+            } else {
+                hiddenCheck.classList.add("hidden");
+            }
+        }
+    </script>
+</body>
+
+</html>
