@@ -1,77 +1,69 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
+	static class Problem implements Comparable<Problem>{
+		int num;
+		boolean visited;
+		LinkedList<Problem> list;
+		
+		Problem(int num, int n) {
+			this.num = num;
+			this.visited = false;
+			this.list = new LinkedList<>();
+		}
+
+		@Override
+		public int compareTo(Problem p) {
+			return this.num - p.num;
+		}
+	}
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int n = Integer.parseInt(br.readLine());
-        HashTable h = new HashTable(n);
+        String[] nm = br.readLine().split(" ");
         StringBuilder sb = new StringBuilder();
-        String[] cards = br.readLine().split(" ");
+        PriorityQueue<Problem> pq = new PriorityQueue<>();
         
-        for(String key : cards) {
-        	h.put(Integer.parseInt(key));
+        int n = Integer.parseInt(nm[0]);
+        int m = Integer.parseInt(nm[1]);
+        
+        int[] before = new int[n + 1];
+        Problem[] nodes = new Problem[n + 1];
+        for(int i = 1; i <= n; i++) {
+        	nodes[i] = new Problem(i, n);
         }
         
-        int m = Integer.parseInt(br.readLine());
-        cards = br.readLine().split(" ");
-        
-        for(String key : cards) {
-        	sb.append(h.get(Integer.parseInt(key))).append(" ");
+        for(int i = 0; i < m; i++) {
+        	String[] ab = br.readLine().split(" ");
+        	int a = Integer.parseInt(ab[0]);
+        	int b = Integer.parseInt(ab[1]);
+        	
+        	before[b]++;
+        	nodes[a].list.add(nodes[b]);
         }
-        System.out.println(sb);
+        
+        for(int i = 1; i <= n; i++) {
+        	if(before[i] == 0) {
+        		pq.add(nodes[i]);
+        		nodes[i].visited = true;
+        	}
+        }
+        
+        while(!pq.isEmpty()) {
+        	Problem now = pq.remove();
+            sb.append(now.num).append(" ");
+            
+            for(Problem next : now.list) {
+            	if(next.visited) continue;
+            	if(--before[next.num] != 0) continue;
+            	pq.add(next);
+            	next.visited = true;
+            }
+        }
+        
+        System.out.println(sb.toString());
         
         br.close();
     }
-}
-
-class HashTable {
-	class Node {
-		int key;
-		int value;
-		Node next;
-		Node(int key) {
-			this.key = key;
-			this.value = 1;
-			next = null;
-		}
-	}
-	
-	Node[] head;
-	private static final int CONST = 10000000;
-	
-	HashTable(int size) {
-		this.head = new Node[size];
-	}
-	
-	int getIdx(int key) {
-		return (key + CONST) % head.length;
-	}
-	
-	void put(int key) {
-		int idx = getIdx(key);
-		Node now = head[idx];
-		Node node = new Node(key);
-		if(now == null) {
-			head[idx] = node;
-			return;
-		}
-		while(true) {
-			if(now.key == key) {
-				now.value++;
-				return;
-			}
-			if(now.next == null) break;
-			now = now.next;
-		}
-		now.next = node;
-	}
-	
-	int get(int key) {
-		int idx = getIdx(key);
-		for(Node n = head[idx]; n != null; n = n.next) {
-			if(n.key == key) return n.value;
-		}
-		return 0;
-	}
 }
