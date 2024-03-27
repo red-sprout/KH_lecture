@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import java.io.*;
 import java.util.*;
 
@@ -80,7 +78,6 @@ public class Main {
     				int nextCol = nowJihun[1] + dc[i];
     				
     				if(nextRow < 0 || nextRow >= r || nextCol < 0 || nextCol >= c) continue;
-    				if(visited[nextRow][nextCol]) continue;
     			}
     		}
     	}
@@ -88,4 +85,3 @@ public class Main {
     	return -1;
     }
 }
->>>>>>> 13459da4bd6a37cfb7d14f7f7672a1e8e5405cc5
