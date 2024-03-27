@@ -2,82 +2,66 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int m, n, k;
-	private static ArrayList<Integer> areaList;
-	private static boolean[][] isNotArea;
-	
-	private static int[] dr = {-1, 1, 0, 0};
-	private static int[] dc = {0, 0, -1, 1};
+	private static int r, c;
+	private static char[][] miro;
+	private static boolean[][] visited;
 	
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
+        r = Integer.parseInt(st.nextToken());
+        c = Integer.parseInt(st.nextToken());
+        miro = new char[r][c];
+        visited = new boolean[r][c];
         
-        m = Integer.parseInt(st.nextToken());
-        n = Integer.parseInt(st.nextToken());
-        k = Integer.parseInt(st.nextToken());
-        isNotArea = new boolean[m][n];
-        areaList = new ArrayList<>();
+        int[] jihun = new int[3];
+        List<int[]> fireList = new ArrayList<>();
         
-        for(int i = 0; i < k; i++) {
-        	st = new StringTokenizer(br.readLine());
-        	int x1 = Integer.parseInt(st.nextToken());
-        	int y1 = Integer.parseInt(st.nextToken());
-        	int x2 = Integer.parseInt(st.nextToken());
-        	int y2 = Integer.parseInt(st.nextToken());
-        	
-        	for(int y = y1; y < y2; y++) {
-        		for(int x = x1; x < x2; x++) {
-        			isNotArea[y][x] = true;
+        for(int i = 0; i < r; i++) {
+        	String row = br.readLine();
+        	for(int j = 0; j < c; j++) {
+        		miro[r][c] = row.charAt(j);
+        		switch(miro[r][c]) {
+        		case 'J':
+        			jihun[0] = r;
+        			jihun[1] = c;
+        			jihun[2] = 0;
+        			break;
+        		case 'F':
+        			fireList.add(new int[] {r, c, 0});
+        			break;
         		}
         	}
         }
         
-        for(int i = 0; i < m; i++) {
-        	for(int j = 0; j < n; j++) {
-        		if(!isNotArea[i][j]) {
-        			bfs(i, j);
-        		}
-        	}
-        }
-        
-        Collections.sort(areaList);
-        
-        sb.append(areaList.size()).append("\n");
-        for(int area : areaList) {
-        	sb.append(area).append(" ");
-        }
-        
-        System.out.println(sb.toString());
+        int result = bfs(jihun, fireList);
         
         br.close();
     }
     
-    public static void bfs(int row, int col) {
-    	int tmp = 0;
-    	Queue<int[]> q = new LinkedList<>();
+    public static int bfs(int[] jihun, List<int[]> fireList) {
+    	int time = 0;
+    	boolean fireMode;
     	
-    	tmp++;
-    	q.add(new int[] {row, col});
-    	isNotArea[row][col] = true;
+    	Queue<int[]> jihunQ = new LinkedList<>();
+    	Queue<int[]> fireQ = new LinkedList<>();
     	
-    	while(!q.isEmpty()) {
-    		int[] now = q.remove();
-    		for(int i = 0; i < 4; i++) {
-    			int nextRow = now[0] + dr[i];
-    			int nextCol = now[1] + dc[i];
-    			
-    			if(nextRow < 0 || nextRow >= m || nextCol < 0 || nextCol >= n) continue;
-    			if(isNotArea[nextRow][nextCol]) continue;
-    			
-    			tmp++;
-    			q.add(new int[] {nextRow, nextCol});
-    			isNotArea[nextRow][nextCol] = true;
+    	jihunQ.add(jihun);
+    	visited[jihun[0]][jihun[1]] = true;
+    	for(int[] fire : fireList) {
+    		fireQ.add(fire);
+    		visited[fire[0]][fire[1]] = true;
+    	}
+    	
+    	while(!jihunQ.isEmpty()) {
+    		int[] nowJihun = jihunQ.peek();
+    		
+    		if(fireQ.isEmpty()) {
+    			fireMode = false;
     		}
     	}
     	
-    	areaList.add(tmp);
+    	return -1;
     }
 }
