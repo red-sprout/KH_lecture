@@ -4,7 +4,6 @@ import java.util.*;
 public class Main {
 	private static int r, c;
 	private static char[][] miro;
-	private static boolean[][] visited;
 	
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,7 +12,6 @@ public class Main {
         r = Integer.parseInt(st.nextToken());
         c = Integer.parseInt(st.nextToken());
         miro = new char[r][c];
-        visited = new boolean[r][c];
         
         int[] jihun = new int[3];
         List<int[]> fireList = new ArrayList<>();
@@ -43,22 +41,45 @@ public class Main {
     public static int bfs(int[] jihun, List<int[]> fireList) {
     	int time = 0;
     	boolean fireMode;
+    	int[] dr = {-1, 1, 0, 0};
+    	int[] dc = {0, 0, -1, 1};
     	
     	Queue<int[]> jihunQ = new LinkedList<>();
     	Queue<int[]> fireQ = new LinkedList<>();
     	
     	jihunQ.add(jihun);
-    	visited[jihun[0]][jihun[1]] = true;
     	for(int[] fire : fireList) {
     		fireQ.add(fire);
-    		visited[fire[0]][fire[1]] = true;
     	}
     	
     	while(!jihunQ.isEmpty()) {
     		int[] nowJihun = jihunQ.peek();
+    		int[] nowFire;
     		
     		if(fireQ.isEmpty()) {
     			fireMode = false;
+    		} else {
+    			nowFire = fireQ.peek();
+    			fireMode = (nowJihun[2] != time) && (nowFire[2] == time);
+    		}
+    		
+    		if(fireMode) {
+    			nowFire = fireQ.remove();
+    			for(int i = 0; i < 4; i++) {
+    				int nextRow = nowFire[0] + dr[i];
+    				int nextCol = nowFire[1] + dc[i];
+    				
+    				if(nextRow < 0 || nextRow >= r || nextCol < 0 || nextCol >= c) continue;
+    			}
+    		} else {
+    			nowJihun = jihunQ.remove();
+    			for(int i = 0; i < 4; i++) {
+    				int nextRow = nowJihun[0] + dr[i];
+    				int nextCol = nowJihun[1] + dc[i];
+    				
+    				if(nextRow < 0 || nextRow >= r || nextCol < 0 || nextCol >= c) continue;
+    				if(visited[nextRow][nextCol]) continue;
+    			}
     		}
     	}
     	
